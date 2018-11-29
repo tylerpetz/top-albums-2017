@@ -4,7 +4,11 @@
       <article class="album">
         <transition name="cover" mode="out-in">
           <figure class="album__cover" :key="selectedAlbum">
-            <img class="album__cover--img" :src="album.cover" :alt="album.artist" />
+            <img
+              class="album__cover--img"
+              :src="album.cover"
+              :alt="album.artist"
+            />
           </figure>
         </transition>
         <header class="album__details">
@@ -14,9 +18,7 @@
             </h1>
           </transition>
           <transition name="album" mode="out-in">
-            <h2 class="album__title" :key="selectedAlbum">
-              {{ album.title }}
-            </h2> 
+            <h2 class="album__title" :key="selectedAlbum">{{ album.title }}</h2>
           </transition>
         </header>
         <transition name="bg" mode="out-in">
@@ -29,22 +31,14 @@
       </article>
     </section>
     <section class="top-albums__nav">
-      <a
-        class="nav-item prev"
-        @click="prevAlbum"
-        :disabled="firstAlbum"
-      >
+      <a class="nav-item prev" @click="prevAlbum" :disabled="firstAlbum">
         <svg id="icon-prev" viewBox="0 0 100 50" width="100%" height="100%">
           <polygon
             points="5.4,25 18.7,38.2 22.6,34.2 16.2,27.8 94.6,27.8 94.6,22.2 16.2,22.2 22.6,15.8 18.7,11.8"
           />
         </svg>
       </a>
-      <a
-        class="nav-item next"
-        @click="nextAlbum"
-        :disabled="lastAlbum"
-      >
+      <a class="nav-item next" @click="nextAlbum" :disabled="lastAlbum">
         <svg id="icon-next" viewBox="0 0 100 50" width="100%" height="100%">
           <polygon
             points="81.3,11.8 77.4,15.8 83.8,22.2 5.4,22.2 5.4,27.8 83.8,27.8 77.4,34.2 81.3,38.2 94.6,25"
@@ -84,14 +78,14 @@ export default {
     }
   },
   methods: {
-    nextAlbum: _.debounce(function () { 
-      this.selectedAlbum++ 
+    nextAlbum: _.debounce(function() {
+      this.selectedAlbum++;
     }, 300),
-    prevAlbum: _.debounce(function () { 
-      this.selectedAlbum--
+    prevAlbum: _.debounce(function() {
+      this.selectedAlbum--;
     }, 300)
   },
-  created: function () {
+  created: function() {
     let self = this;
 
     window.addEventListener("keyup", function(e) {
@@ -106,11 +100,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-$blue: #247BA0;
-$green: #70C1B3;
-$lightgreen: #B2DBBF;
-$yellow: #F3FFBD;
-$red: #FF1654;
+$blue: #247ba0;
+$green: #70c1b3;
+$lightgreen: #b2dbbf;
+$yellow: #f3ffbd;
+$red: #ff1654;
 
 .top-albums {
   &__list {
@@ -156,7 +150,7 @@ $red: #FF1654;
     pointer-events: none;
 
     polygon {
-      fill: #ED393A;
+      fill: #ed393a;
       transition: fill 250ms ease;
     }
   }
@@ -207,7 +201,6 @@ $red: #FF1654;
     img {
       width: 300px;
       max-width: 300px;
-      
     }
   }
 
@@ -220,7 +213,7 @@ $red: #FF1654;
   }
 
   &__artist {
-    color: #ECECEC;
+    color: #ececec;
     display: inline-block;
     font-size: 2.5em;
     font-style: italic;
@@ -232,7 +225,7 @@ $red: #FF1654;
   }
 
   &__title {
-    color: #4D9DE0;
+    color: #4d9de0;
     font-size: 4em;
     font-weight: 400;
     line-height: 1;
@@ -243,48 +236,53 @@ $red: #FF1654;
 }
 
 .artist-enter-active {
-  transition: all .35s ease;
+  transition: all 0.35s ease;
 }
 
 .artist-leave-active {
-  transition: all .25s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+  transition: all 0.25s cubic-bezier(1, 0.5, 0.8, 1);
 }
 
-.artist-enter, .artist-leave-to {
+.artist-enter,
+.artist-leave-to {
   opacity: 0;
   transform: translate3d(20px, 0, 100px);
 }
 
 .album-enter-active {
-  transition: all .35s ease;
+  transition: all 0.35s ease;
 }
 
 .album-leave-active {
-  transition: all .25s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+  transition: all 0.25s cubic-bezier(1, 0.5, 0.8, 1);
 }
 
-.album-enter, .album-leave-to {
+.album-enter,
+.album-leave-to {
   opacity: 0;
   transform: translate3d(20px, 20px, 100px);
 }
 
-.bg-enter-active, .bg-leave-active {
-  transition: opacity .15s;
+.bg-enter-active,
+.bg-leave-active {
+  transition: opacity 0.15s;
 }
 
-.bg-enter, .bg-leave-to {
+.bg-enter,
+.bg-leave-to {
   opacity: 0;
 }
 
 .cover-enter-active {
-  transition: all .3s ease;
+  transition: all 0.3s ease;
 }
 
 .cover-leave-active {
-  transition: all .25s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+  transition: all 0.25s cubic-bezier(1, 0.5, 0.8, 1);
 }
 
-.cover-enter, .cover-leave-to {
+.cover-enter,
+.cover-leave-to {
   opacity: 0;
   transform: perspective(1400px) translate3d(0px, 0px, 350px);
 }
