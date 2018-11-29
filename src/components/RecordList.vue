@@ -56,6 +56,7 @@
 </template>
 
 <script>
+import _ from "lodash";
 import albumsJson from "../assets/albums.json";
 
 export default {
@@ -83,12 +84,23 @@ export default {
     }
   },
   methods: {
-    nextAlbum() {
-      this.selectedAlbum++;
-    },
-    prevAlbum() {
-      this.selectedAlbum--;
-    }
+    nextAlbum: _.debounce(function () { 
+      this.selectedAlbum++ 
+    }, 300),
+    prevAlbum: _.debounce(function () { 
+      this.selectedAlbum--
+    }, 300)
+  },
+  created: function () {
+    let self = this;
+
+    window.addEventListener("keyup", function(e) {
+      if (e.keyCode == 37) {
+        self.prevAlbum();
+      } else if (e.keyCode == 39) {
+        self.nextAlbum();
+      }
+    });
   }
 };
 </script>
@@ -186,10 +198,11 @@ $red: #FF1654;
   }
 
   &__cover {
-    user-select: none;
-    width: 300px;
+    margin: 0;
     perspective: 1000px;
     transform-style: preserve-3d;
+    user-select: none;
+    width: 300px;
 
     img {
       width: 300px;
@@ -211,6 +224,7 @@ $red: #FF1654;
     display: inline-block;
     font-size: 2.5em;
     font-style: italic;
+    font-weight: 400;
     line-height: 1.6;
     margin: 0;
     user-select: none;
@@ -220,6 +234,7 @@ $red: #FF1654;
   &__title {
     color: #4D9DE0;
     font-size: 4em;
+    font-weight: 400;
     line-height: 1;
     margin: 0;
     user-select: none;
@@ -236,8 +251,8 @@ $red: #FF1654;
 }
 
 .artist-enter, .artist-leave-to {
-  transform: translate3d(20px, 0, 100px);
   opacity: 0;
+  transform: translate3d(20px, 0, 100px);
 }
 
 .album-enter-active {
@@ -249,8 +264,8 @@ $red: #FF1654;
 }
 
 .album-enter, .album-leave-to {
-  transform: translate3d(20px, 20px, 100px);
   opacity: 0;
+  transform: translate3d(20px, 20px, 100px);
 }
 
 .bg-enter-active, .bg-leave-active {
@@ -270,7 +285,7 @@ $red: #FF1654;
 }
 
 .cover-enter, .cover-leave-to {
-  transform: perspective(1400px) translate3d(0px, 0px, 350px);
   opacity: 0;
+  transform: perspective(1400px) translate3d(0px, 0px, 350px);
 }
 </style>

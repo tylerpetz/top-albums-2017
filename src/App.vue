@@ -14,8 +14,6 @@ export default {
 </script>
 
 <style lang="scss">
-@import "bulma/bulma.sass";
-
 $grey: #252525;
 
 $font: "IBM Plex Mono", monospace;
