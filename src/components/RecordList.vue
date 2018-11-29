@@ -1,46 +1,57 @@
 <template>
   <div class="top-albums">
-    <div class="top-albums-list">
-      <div
-        v-for="(album, i) in albums"
-        :key="album.index"
-        :class="{ active: i == selectedAlbum }"
-        class="album"
-      >
-        <div
-          class="album-bg"
-          :style="{ backgroundImage: 'url(' + album.cover + ')' }"
-        />
-        <img class="album-fg" :src="album.cover" :alt="album.title" />
-        <div class="album-title">
-          <span class="album-title-number">{{ i + 1 }}</span> {{ album.title }}
-        </div>
-      </div>
-    </div>
-    <div class="top-albums-nav">
+    <section class="top-albums__list">
+      <article class="album">
+        <transition name="cover" mode="out-in">
+          <figure class="album__cover" :key="selectedAlbum">
+            <img class="album__cover--img" :src="album.cover" :alt="album.artist" />
+          </figure>
+        </transition>
+        <header class="album__details">
+          <transition name="artist" mode="out-in">
+            <h1 class="album__artist" :key="selectedAlbum">
+              {{ album.artist }}
+            </h1>
+          </transition>
+          <transition name="album" mode="out-in">
+            <h2 class="album__title" :key="selectedAlbum">
+              {{ album.title }}
+            </h2> 
+          </transition>
+        </header>
+        <transition name="bg" mode="out-in">
+          <div
+            class="album__bg"
+            :style="{ backgroundImage: 'url(' + album.cover + ')' }"
+            :key="selectedAlbum"
+          />
+        </transition>
+      </article>
+    </section>
+    <section class="top-albums__nav">
       <a
-        class="navigate prev"
+        class="nav-item prev"
         @click="prevAlbum"
-        :disabled="selectedAlbum === 0"
+        :disabled="firstAlbum"
       >
         <svg id="icon-prev" viewBox="0 0 100 50" width="100%" height="100%">
           <polygon
             points="5.4,25 18.7,38.2 22.6,34.2 16.2,27.8 94.6,27.8 94.6,22.2 16.2,22.2 22.6,15.8 18.7,11.8"
-          ></polygon>
+          />
         </svg>
       </a>
       <a
-        class="navigate next"
+        class="nav-item next"
         @click="nextAlbum"
-        :disabled="selectedAlbum === albums.length - 1"
+        :disabled="lastAlbum"
       >
         <svg id="icon-next" viewBox="0 0 100 50" width="100%" height="100%">
           <polygon
-            points="81.3,11.8 77.4,15.8 83.8,22.2 5.4,22.2 5.4,27.8 83.8,27.8 77.4,34.2 81.3,38.2 94.6,25 "
-          ></polygon>
+            points="81.3,11.8 77.4,15.8 83.8,22.2 5.4,22.2 5.4,27.8 83.8,27.8 77.4,34.2 81.3,38.2 94.6,25"
+          />
         </svg>
       </a>
-    </div>
+    </section>
   </div>
 </template>
 
@@ -56,6 +67,21 @@ export default {
       albums: albumsJson
     };
   },
+  computed: {
+    firstAlbum() {
+      return this.selectedAlbum === 0;
+    },
+    lastAlbum() {
+      return this.selectedAlbum === this.albums.length - 1;
+    },
+    album() {
+      return {
+        artist: this.albums[this.selectedAlbum].artist,
+        title: this.albums[this.selectedAlbum].title,
+        cover: this.albums[this.selectedAlbum].cover
+      };
+    }
+  },
   methods: {
     nextAlbum() {
       this.selectedAlbum++;
@@ -68,131 +94,183 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-$darkblue: #24263f;
-$blue: #2a4468;
-$lightblue: #117cd9;
-$white: #e7e9f5;
-$red: #ed3224;
-$purp: #24263f;
+$blue: #247BA0;
+$green: #70C1B3;
+$lightgreen: #B2DBBF;
+$yellow: #F3FFBD;
+$red: #FF1654;
 
 .top-albums {
-  height: 100vh;
-  position: relative;
-  width: 100vw;
-  max-width: 1600px;
-  margin: 0 auto;
+  &__list {
+    align-items: center;
+    display: flex;
+    height: 100vh;
+    justify-content: center;
+    width: 100vw;
+  }
+
+  &__nav {
+    bottom: 2em;
+    position: absolute;
+    right: 2em;
+    z-index: 100;
+  }
 }
 
-.top-albums-list {
-  pointer-events: none;
+.nav-item {
+  cursor: pointer;
+  display: block;
+  height: 50px;
+  transition: transform 150ms ease;
+  width: 100px;
+  z-index: 20;
 
-  .album {
-    height: 100%;
-    left: 0;
-    margin: 0;
-    opacity: 0;
-    padding: 6em 0;
+  &.prev {
+    margin-left: -3rem;
+
+    &:active:not[disabled] {
+      transform: translateX(-0.25rem);
+    }
+  }
+
+  &.next {
+    &:active:not([disabled]) {
+      transform: translateX(0.25rem);
+    }
+  }
+
+  svg {
+    filter: drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.25));
     pointer-events: none;
-    position: absolute;
+
+    polygon {
+      fill: #ED393A;
+      transition: fill 250ms ease;
+    }
+  }
+
+  &[disabled] {
+    pointer-events: none;
+
+    svg polygon {
+      fill: #333333;
+    }
+  }
+}
+
+.album {
+  align-items: center;
+  display: flex;
+  height: 300px;
+  margin: 0;
+  position: relative;
+  width: 1024px;
+
+  & * {
+    perspective: 1000px;
+    transform-style: preserve-3d;
+  }
+
+  &__bg {
+    background-position: center right;
+    background-repeat: no-repeat;
+    background-size: 100%;
+    filter: blur(20px);
+    height: 100%;
+    opacity: 0.1;
+    position: fixed;
+    right: 0;
     top: 0;
     width: 100%;
+    z-index: 1;
+  }
 
-    &.active {
-      opacity: 1;
+  &__cover {
+    user-select: none;
+    width: 300px;
+    perspective: 1000px;
+    transform-style: preserve-3d;
+
+    img {
+      width: 300px;
+      max-width: 300px;
+      
     }
+  }
 
-    .album-bg {
-      background-position: top right;
-      background-repeat: no-repeat;
-      background-size: 65%;
-      filter: blur(5px);
-      height: 100vh;
-      opacity: 0.1;
-      position: absolute;
-      right: 0;
-      top: 0;
-      width: 100%;
-      z-index: 1;
-    }
+  &__details {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    height: 100%;
+    padding-left: 1.5em;
+  }
 
-    .album-fg {
-      position: relative;
-      z-index: 20;
-    }
+  &__artist {
+    color: #ECECEC;
+    display: inline-block;
+    font-size: 2.5em;
+    font-style: italic;
+    line-height: 1.6;
+    margin: 0;
+    user-select: none;
+    z-index: 20;
+  }
 
-    .album-title {
-      color: $white;
-      display: inline-block;
-      font-size: 6em;
-      left: 0;
-      line-height: 0.8;
-      margin: 0;
-      padding: 1em 0 0;
-      pointer-events: none;
-      position: absolute;
-      top: 70%;
-      z-index: 20;
-
-      .album-title-number {
-        color: $red;
-      }
-    }
+  &__title {
+    color: #4D9DE0;
+    font-size: 4em;
+    line-height: 1;
+    margin: 0;
+    user-select: none;
+    z-index: 20;
   }
 }
 
-.top-albums-nav {
-  bottom: 2em;
-  position: absolute;
-  right: 2em;
-  z-index: 100;
+.artist-enter-active {
+  transition: all .35s ease;
+}
 
-  .navigate {
-    cursor: pointer;
-    display: block;
-    height: 50px;
-    transition: transform 150ms ease-in-out;
-    width: 100px;
-    z-index: 20;
+.artist-leave-active {
+  transition: all .25s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+}
 
-    &.prev {
-      margin-left: -3rem;
+.artist-enter, .artist-leave-to {
+  transform: translate3d(20px, 0, 100px);
+  opacity: 0;
+}
 
-      &:active {
-        transform: translateX(-0.5rem);
-      }
-    }
+.album-enter-active {
+  transition: all .35s ease;
+}
 
-    &.next {
-      &:active {
-        transform: translateX(0.5rem);
-      }
-    }
+.album-leave-active {
+  transition: all .25s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+}
 
-    svg {
-      filter: drop-shadow(1px 1px 2px rgba(0,0,0,.25));
-      pointer-events: none;
+.album-enter, .album-leave-to {
+  transform: translate3d(20px, 20px, 100px);
+  opacity: 0;
+}
 
-      polygon {
-        fill: $red;
-      }
-    }
+.bg-enter-active, .bg-leave-active {
+  transition: opacity .15s;
+}
 
-    &:hover,
-    &:active,
-    &:focus {
-      svg polygon {
-        fill: $white;
-      }
-    }
+.bg-enter, .bg-leave-to {
+  opacity: 0;
+}
 
-    &[disabled] {
-      filter: drop-shadow(1px 1px 2px rgba(0,0,0,.65));
-      pointer-events: none;
+.cover-enter-active {
+  transition: all .3s ease;
+}
 
-      svg polygon {
-        fill: $purp;
-      }
-    }
-  }
+.cover-leave-active {
+  transition: all .25s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+}
+
+.cover-enter, .cover-leave-to {
+  transform: perspective(1400px) translate3d(0px, 0px, 350px);
+  opacity: 0;
 }
 </style>
