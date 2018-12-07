@@ -2,6 +2,11 @@
   <div class="top-albums">
     <section class="top-albums__list">
       <article class="album">
+        <transition name="rank" mode="out-in">
+          <span class="album__rank" :key="selectedAlbum">
+            {{ selectedAlbum + 1 }}
+          </span>
+        </transition>
         <transition name="cover" mode="out-in">
           <figure class="album__cover" :key="selectedAlbum">
             <img
@@ -134,7 +139,7 @@ $red: #ff1654;
   &.prev {
     margin-left: -3rem;
 
-    &:active:not[disabled] {
+    &:active:not([disabled]) {
       transform: translateX(-0.25rem);
     }
   }
@@ -175,6 +180,7 @@ $red: #ff1654;
   & * {
     perspective: 1000px;
     transform-style: preserve-3d;
+    user-select: none;
   }
 
   &__bg {
@@ -210,6 +216,17 @@ $red: #ff1654;
     flex-grow: 1;
     height: 100%;
     padding-left: 1.5em;
+  }
+
+  &__rank {
+    color: #333333;
+    display: block;
+    font-size: 22em;
+    left: 450px;
+    pointer-events: none;
+    position: absolute;
+    text-align: center;
+    top: -70px;
   }
 
   &__artist {
