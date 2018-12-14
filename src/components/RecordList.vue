@@ -189,7 +189,7 @@ $red: #ff1654;
     background-size: 100%;
     filter: blur(20px);
     height: 100%;
-    opacity: 0.1;
+    opacity: 0.15;
     position: fixed;
     right: 0;
     top: 0;
@@ -280,15 +280,20 @@ $red: #ff1654;
   transform: translate3d(20px, 20px, 100px);
 }
 
-.bg-enter-active,
+.bg-enter-active {
+  transition: all 0.75s ease;
+}
+
 .bg-leave-active {
-  transition: opacity 0.15s;
+  transition: all 0.25s cubic-bezier(1, 0.5, 0.8, 1);
 }
 
 .bg-enter,
 .bg-leave-to {
   opacity: 0;
+  transform: translate3d(40px, 40px, 100px);
 }
+
 
 .cover-enter-active {
   transition: all 0.3s ease;
